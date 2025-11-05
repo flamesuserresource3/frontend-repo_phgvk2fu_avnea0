@@ -85,7 +85,7 @@ export default function HomeShowcase() {
               className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
             >
               <div className="relative h-48">
-                <img src={c.image} alt={c.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img loading="lazy" src={c.image} alt={c.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
               </div>
               <div className="p-4">

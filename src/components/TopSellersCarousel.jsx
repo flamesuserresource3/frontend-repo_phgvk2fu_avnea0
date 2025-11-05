@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const products = [
   {
@@ -46,9 +46,9 @@ const products = [
 
 function ProductCard({ product }) {
   return (
-    <div className="group relative w-72 shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+    <div className="group relative w-72 shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm will-change-transform">
       <div className="relative h-44 overflow-hidden">
-        <img src={product.image} alt={product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img loading="lazy" src={product.image} alt={product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
       <div className="p-4">
@@ -70,6 +70,15 @@ function ProductCard({ product }) {
 }
 
 export default function TopSellersCarousel() {
+  const prefersReducedMotion = useReducedMotion();
+  const animationProps = prefersReducedMotion
+    ? {}
+    : {
+        initial: { x: 0 },
+        animate: { x: ['0%', '-50%'] },
+        transition: { repeat: Infinity, duration: 28, ease: 'linear' },
+      };
+
   return (
     <section id="topsellers" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-end justify-between">
@@ -80,12 +89,7 @@ export default function TopSellersCarousel() {
       </div>
 
       <div className="relative mt-6 overflow-hidden">
-        <motion.div
-          className="flex gap-5"
-          initial={{ x: 0 }}
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ repeat: Infinity, duration: 28, ease: 'linear' }}
-        >
+        <motion.div className="flex gap-5" style={{ willChange: 'transform' }} {...animationProps}>
           {[...products, ...products].map((p, i) => (
             <ProductCard key={p.id + '-' + i} product={p} />
           ))}

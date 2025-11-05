@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Spline from '@splinetool/react-spline';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 export default function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+  const [show3D, setShow3D] = useState(false);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const t = setTimeout(() => setShow3D(true), 300);
+    return () => clearTimeout(t);
+  }, [prefersReducedMotion]);
+
   return (
     <section className="relative w-full min-h-[78vh] bg-white">
       <div className="absolute inset-0">
-        <Spline
-          scene="https://prod.spline.design/myxXfbNiwnbTpGFp/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
-        />
+        {!prefersReducedMotion && show3D ? (
+          <Spline
+            scene="https://prod.spline.design/myxXfbNiwnbTpGFp/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
+          />
+        ) : (
+          <div className="h-full w-full bg-gradient-to-br from-white via-amber-50 to-white" />
+        )}
       </div>
 
       <div className="absolute inset-0 pointer-events-none">
@@ -22,7 +35,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: 'easeOut' }}
+          transition={{ duration: prefersReducedMotion ? 0 : 0.9, ease: 'easeOut' }}
           className="max-w-2xl"
         >
           <p className="inline-flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-amber-300/40">
